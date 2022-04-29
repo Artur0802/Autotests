@@ -50,7 +50,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Pages\DatePickerPage.cs" />
+    <Compile Include="Pages\DemoTestingSitePage.cs" />
     <Compile Include="Pages\GlobalsqaPage.cs" />
+    <Compile Include="Pages\ProgressBarPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
