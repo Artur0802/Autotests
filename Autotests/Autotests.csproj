@@ -52,6 +52,10 @@
   <ItemGroup>
     <Compile Include="Pages\DatePickerPage.cs" />
     <Compile Include="Pages\DemoTestingSitePage.cs" />
+    <Compile Include="Pages\Etsy\CartPage.cs" />
+    <Compile Include="Pages\Etsy\MainPage.cs" />
+    <Compile Include="Pages\Etsy\ShoesProductPage.cs" />
+    <Compile Include="Pages\Etsy\WomenBootsPage.cs" />
     <Compile Include="Pages\GlobalsqaPage.cs" />
     <Compile Include="Pages\ProgressBarPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

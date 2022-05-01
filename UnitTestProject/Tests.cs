@@ -1,4 +1,5 @@
 ﻿using Autotests.Pages;
+using Autotests.Pages.Etsy;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -7,6 +8,7 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System;
 using System.Globalization;
+using System.Linq;
 
 namespace UnitTestProject
 {
@@ -29,85 +31,98 @@ namespace UnitTestProject
         }
 
         [Test]
-        public void VerifyDateFormat()
+        public void CalculateBootsWithDiscount()
         {
-            _driver.Url = "https://www.globalsqa.com/";
-            var globalSqaPage = new GlobalsqaPage(_driver);
+            _driver.Url = "https://www.etsy.com/";
 
-            var action = new Actions(_driver);
+            var eatsyMainPage = new MainPage(_driver);
+            eatsyMainPage.MoveSubmenuItem(eatsyMainPage.ClothingAndShoesMenuItem, eatsyMainPage.WomensBootsMenuItem);
 
-            action.MoveToElement(globalSqaPage.TestersHubMenu)
-                .MoveToElement(globalSqaPage.DemoTestingSiteSubMenu)
-                .MoveToElement(globalSqaPage.DatePickerMenuItem)
-                .Click().Perform();
-
-            var datePickerPage = new DatePickerPage(_driver);
-
-            _driver.SwitchTo().Frame(datePickerPage.DatePickerFrame);
-
-            datePickerPage.DateInputField.Click();
-            datePickerPage.NextMonthButton.Click();
-            datePickerPage.SetDayOfMonth(DateTime.Today.Day);
-
-            var chosenDate = datePickerPage.DateInputField.GetAttribute("value");
-            string expectedDateFormat = "MM/dd/yyyy";
-            bool ifDateFormatValid = DateTime.TryParseExact(chosenDate, expectedDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate);
-
-            Assert.IsTrue(ifDateFormatValid, $"The format of the date {chosenDate} doesn't meet the required format - {expectedDateFormat}");
+            var womenBootsPage = new WomenBootsPage(_driver);
+            var bootsWithDiscountCount = womenBootsPage.BootsWithDiscount.Count;
+            Console.WriteLine($"{bootsWithDiscountCount} boots with discount have been found");
         }
 
-        [Test]
-        public void VerifyItemsCountInColumns()
-        {
-            _driver.Url = "https://www.globalsqa.com/";
-            var globalSqaPage = new GlobalsqaPage(_driver);
+        //[Test]
+        //public void VerifyDateFormat()
+        //{
+            //_driver.Url = "https://www.globalsqa.com/";
+            //var globalSqaPage = new GlobalsqaPage(_driver);
 
-            var action = new Actions(_driver);
+            //var action = new Actions(_driver);
 
-            action.MoveToElement(globalSqaPage.TestersHubMenu)
-                .MoveToElement(globalSqaPage.DemoTestingSiteSubMenu)
-                .Click().Perform();
+            //action.MoveToElement(globalSqaPage.TestersHubMenu)
+                //.MoveToElement(globalSqaPage.DemoTestingSiteSubMenu)
+                //.MoveToElement(globalSqaPage.DatePickerMenuItem)
+                //.Click().Perform();
 
-            var demoTestingSitePage = new DemoTestingSitePage(_driver);
+            //var datePickerPage = new DatePickerPage(_driver);
 
-            int expecteditemsCountInColumns = 6;
-            foreach (var column in demoTestingSitePage.Columns)
-            {
-                var itemsCountInColumns = column.FindElements(By.CssSelector(".price_footer")).Count;
-                Assert.IsTrue(itemsCountInColumns == expecteditemsCountInColumns,
-                    $"Items count {itemsCountInColumns} in column {column.FindElement(By.ClassName("price_column_title")).Text} doesn't equal {expecteditemsCountInColumns}");
-            }
-        }
+            //_driver.SwitchTo().Frame(datePickerPage.DatePickerFrame);
 
-        [Test]
-        public void VerifyDownload()
-        {
-            _driver.Url = "https://www.globalsqa.com/";
-            var globalSqaPage = new GlobalsqaPage(_driver);
+            //datePickerPage.DateInputField.Click();
+            //datePickerPage.NextMonthButton.Click();
+            //datePickerPage.SetDayOfMonth(DateTime.Today.Day);
 
-            var action = new Actions(_driver);
+            //var chosenDate = datePickerPage.DateInputField.GetAttribute("value");
+            //string expectedDateFormat = "MM/dd/yyyy";
+            //bool ifDateFormatValid = DateTime.TryParseExact(chosenDate, expectedDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate);
 
-            action.MoveToElement(globalSqaPage.TestersHubMenu)
-                .MoveToElement(globalSqaPage.DemoTestingSiteSubMenu)
-                .MoveToElement(globalSqaPage.ProgressBarMenuItem)
-                .Click().Perform();
+            //Assert.IsTrue(ifDateFormatValid, $"The format of the date {chosenDate} doesn't meet the required format - {expectedDateFormat}");
+        //}
 
-            var progressBarPage = new ProgressBarPage(_driver);
+        //[Test]
+        //public void VerifyItemsCountInColumns()
+        //{
+            //_driver.Url = "https://www.globalsqa.com/";
+            //var globalSqaPage = new GlobalsqaPage(_driver);
 
-            _driver.SwitchTo().Frame(progressBarPage.DownloadFrame);
-            progressBarPage.StartDownloadButton.Click();
+            //var action = new Actions(_driver);
 
-            WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15))
-            {
-                Message = $"Downloading didn't get to Completed state after 15 seconds",
-                PollingInterval = TimeSpan.FromSeconds(3)
-            };
+            //action.MoveToElement(globalSqaPage.TestersHubMenu)
+                //.MoveToElement(globalSqaPage.DemoTestingSiteSubMenu)
+                //.Click().Perform();
 
-            string expectedProgressBarLabel = "Complete!";
-            wait.Until(ExpectedConditions.TextToBePresentInElement(progressBarPage.ProgressBarLabel, expectedProgressBarLabel));
+            //var demoTestingSitePage = new DemoTestingSitePage(_driver);
 
-            Assert.IsTrue(progressBarPage.ProgressBarLabel.Text == expectedProgressBarLabel);
-        }
+            //int expecteditemsCountInColumns = 6;
+            //foreach (var column in demoTestingSitePage.Columns)
+            //{
+                //var itemsCountInColumns = column.FindElements(By.CssSelector(".price_footer")).Count;
+                //Assert.IsTrue(itemsCountInColumns == expecteditemsCountInColumns,
+                    //$"Items count {itemsCountInColumns} in column {column.FindElement(By.ClassName("price_column_title")).Text} doesn't equal {expecteditemsCountInColumns}");
+            //}
+        //}
+
+        //[Test]
+        //public void VerifyDownload()
+        //{
+            //_driver.Url = "https://www.globalsqa.com/";
+            //var globalSqaPage = new GlobalsqaPage(_driver);
+
+            //var action = new Actions(_driver);
+
+            //action.MoveToElement(globalSqaPage.TestersHubMenu)
+                //.MoveToElement(globalSqaPage.DemoTestingSiteSubMenu)
+                //.MoveToElement(globalSqaPage.ProgressBarMenuItem)
+                //.Click().Perform();
+
+            //var progressBarPage = new ProgressBarPage(_driver);
+
+            //_driver.SwitchTo().Frame(progressBarPage.DownloadFrame);
+            //progressBarPage.StartDownloadButton.Click();
+
+            //WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15))
+            //{
+                //Message = $"Downloading didn't get to Completed state after 15 seconds",
+                //PollingInterval = TimeSpan.FromSeconds(3)
+            //};
+
+            //string expectedProgressBarLabel = "Complete!";
+            //wait.Until(ExpectedConditions.TextToBePresentInElement(progressBarPage.ProgressBarLabel, expectedProgressBarLabel));
+
+            //Assert.IsTrue(progressBarPage.ProgressBarLabel.Text == expectedProgressBarLabel);
+        //}
         
         //[Test]
         //public void DropdownItemsCountCheck()
